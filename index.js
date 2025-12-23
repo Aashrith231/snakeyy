@@ -1,3 +1,16 @@
+function drawRoundedRect(x, y, size, radius, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.arcTo(x + size, y, x + size, y + size, radius);
+    ctx.arcTo(x + size, y + size, x, y + size, radius);
+    ctx.arcTo(x, y + size, x, y, radius);
+    ctx.arcTo(x, y, x + size, y, radius);
+    ctx.closePath();
+    ctx.fill();
+}
+
+
 const gameBoard = document.querySelector("#gameBoard");
 const ctx = gameBoard.getContext("2d");
 const Score = document.querySelector("#Score");
@@ -5,9 +18,11 @@ const resetButton = document.querySelector("#resetButton");
 const gameWidth = gameBoard.width;
 const foodColor = "red";
 const gameHeight = gameBoard.height;
-const boardcolor = "white";
+// const boardcolor = "white";
+const boardcolor = "#111";
+
 const snakecolor = "lightgreen";
-const snakeBorder = "black";
+const snakeBorder = "none";
 const unitsize = 25;
 let running = false;
 let xvel = unitsize;
@@ -70,20 +85,46 @@ function createFood(){
     console.log(foodx);
 
 };
-function drawfood(){
-    // clearBoard();
-    ctx.fillStyle=foodColor;
-    ctx.fillRect(foodx,foody,unitsize,unitsize);
-};
-function drawSnake(){
-    ctx.fillStyle=snakecolor;
-    ctx.strokeStyle=snakeBorder;
-    snake.forEach(snakePart =>{
-        ctx.fillRect(snakePart.x,snakePart.y,unitsize,unitsize);
-        ctx.strokeRect(snakePart.x,snakePart.y,unitsize,unitsize);
 
-    })
-};
+
+function drawfood(){
+    ctx.fillStyle = "red";
+    ctx.shadowColor = "red";
+    ctx.shadowBlur = 15;
+    ctx.fillRect(foodx, foody, unitsize, unitsize);
+    ctx.shadowBlur = 0;
+}
+
+// function drawfood(){
+//     // clearBoard();
+//     ctx.fillStyle=foodColor;
+//     ctx.fillRect(foodx,foody,unitsize,unitsize);
+// };
+// function drawSnake(){
+//     ctx.fillStyle=snakecolor;
+//     // ctx.strokeStyle=snakeBorder;
+//     snake.forEach(snakePart =>{
+//         ctx.fillRect(snakePart.x,snakePart.y,unitsize,unitsize);
+//         ctx.strokeRect(snakePart.x,snakePart.y,unitsize,unitsize);
+
+//     })
+// };
+
+
+
+
+function drawSnake(){
+    snake.forEach((part, index) => {
+        if(index === 0){
+            
+            drawRoundedRect(part.x, part.y, unitsize, 8, "#09bd42ff");
+        } else {
+            
+            drawRoundedRect(part.x, part.y, unitsize, 6, "#3cffc0");
+        }
+    });
+}
+
 function moveSnake(){
     const head ={x:snake[0].x+xvel,
         y: snake[0].y+yvel
@@ -147,14 +188,33 @@ function checkgameOver(){
         }
     }
 };
-function displaygameOver(){
-    ctx.font=" 50px MV Boli";
-    ctx.fillStyle="black";
-    ctx.textAlign="center";
-    ctx.fillText("GAME OVER!",gameWidth/2,gameHeight/2);
-    running = false;
+// function displaygameOver(){
+//     ctx.font=" 50px MV Boli";
+//     ctx.fillStyle="black";
+//     ctx.textAlign="center";
+//     ctx.fillText("GAME OVER!",gameWidth/2,gameHeight/2);
+//     running = false;
 
-};
+// };
+
+
+
+function displaygameOver(){
+    ctx.fillStyle = "rgba(0,0,0,0.6)";
+    ctx.fillRect(0,0,gameWidth,gameHeight);
+
+    ctx.font = "48px system-ui";
+    ctx.fillStyle = "#ff4c4c";
+    ctx.textAlign = "center";
+    ctx.fillText("GAME OVER", gameWidth/2, gameHeight/2);
+
+    ctx.font = "18px system-ui";
+    ctx.fillStyle = "#ccc";
+    ctx.fillText("Press Reset", gameWidth/2, gameHeight/2 + 40);
+
+    running = false;
+}
+
 function resetGame(){
     score=0;
     xvel=unitsize;
